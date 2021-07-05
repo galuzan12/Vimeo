@@ -49,7 +49,7 @@ export default function todos(state = initialState, action) {
   switch (action.type) {
     case ADD_TODO:
       return {
-        ...state,
+        future: [],
         past: [...past, present],
         present: [
           ...present,
@@ -63,7 +63,7 @@ export default function todos(state = initialState, action) {
 
     case DELETE_TODO:
       return {
-        ...state,
+        future: [],
         past: [...past, present],
         present: present.filter((todo) => todo.id !== action.id)
       }
@@ -78,7 +78,7 @@ export default function todos(state = initialState, action) {
 
     case COMPLETE_TODO:
       return {
-        ...state,
+        future: [],
         past: [...past, present],
         present: present.map((todo) =>
           todo.id === action.id ? { ...todo, completed: !todo.completed } : todo
