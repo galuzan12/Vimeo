@@ -9,33 +9,12 @@ import {
   REDO
 } from "../constants/ActionTypes";
 
-// const initialState = [
-//   {
-//     text: "Implement Undo",
-//     completed: false,
-//     id: 0
-//   },
-//   {
-//     text: "Implement Redo",
-//     completed: false,
-//     id: 1
-//   }
-// ];
 const initialState = {
   past: [
 
   ],
   present: [
-    {
-      text: "Implement Undo",
-      completed: false,
-      id: 0
-    },
-    {
-      text: "Implement Redo",
-      completed: false,
-      id: 1
-    }
+    
   ],
   future: [
 
