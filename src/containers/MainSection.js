@@ -5,10 +5,13 @@ import MainSection from '../components/MainSection'
 import { getCompletedTodoCount } from '../selectors'
 
 
-const mapStateToProps = state => ({
-  todosCount: state.todos.present.length,
-  completedCount: getCompletedTodoCount(state)
-})
+const mapStateToProps = state => {
+  console.log(state);
+  return ({
+    todosCount: state.todos.present.length,
+    completedCount: getCompletedTodoCount(state)
+  })
+}
 
 
 const mapDispatchToProps = dispatch => ({

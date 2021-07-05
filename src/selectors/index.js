@@ -23,7 +23,6 @@ export const getVisibleTodos = createSelector(
 export const getCompletedTodoCount = createSelector(
   [getTodos],
   todos => {
-    console.log("AAA", todos);
     return (
       todos.present.reduce((count, todo) =>
         todo.completed ? count + 1 : count,

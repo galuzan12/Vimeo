@@ -4,7 +4,9 @@ import {
   EDIT_TODO,
   COMPLETE_TODO,
   COMPLETE_ALL_TODOS,
-  CLEAR_COMPLETED
+  CLEAR_COMPLETED,
+  UNDO,
+  REDO
 } from "../constants/ActionTypes";
 
 // const initialState = [
@@ -41,16 +43,18 @@ const initialState = {
 }
 
 export default function todos(state = initialState, action) {
+
+  const { past, present, future } = state
+
   switch (action.type) {
     case ADD_TODO:
-      const past = [...state.past, state.present];
       return {
         ...state,
-        past,
+        past: [...past, present],
         present: [
-          ...state.present,
+          ...present,
           {
-            id: state.present.reduce((maxId, todo) => Math.max(todo.id, maxId), -1) + 1,
+            id: present.reduce((maxId, todo) => Math.max(todo.id, maxId), -1) + 1,
             completed: false,
             text: action.text
           }
@@ -60,13 +64,14 @@ export default function todos(state = initialState, action) {
     case DELETE_TODO:
       return {
         ...state,
-        present: state.present.filter((todo) => todo.id !== action.id)
+        past: [...past, present],
+        present: present.filter((todo) => todo.id !== action.id)
       }
 
     case EDIT_TODO:
       return {
         ...state,
-        present: state.present.map((todo) =>
+        present: present.map((todo) =>
           todo.id === action.id ? { ...todo, text: action.text } : todo
         )
       };
@@ -74,16 +79,17 @@ export default function todos(state = initialState, action) {
     case COMPLETE_TODO:
       return {
         ...state,
-        present: state.present.map((todo) =>
+        past: [...past, present],
+        present: present.map((todo) =>
           todo.id === action.id ? { ...todo, completed: !todo.completed } : todo
         )
       };
 
     case COMPLETE_ALL_TODOS:
-      const areAllMarked = state.present.every((todo) => todo.completed);
+      const areAllMarked = present.every((todo) => todo.completed);
       return {
         ...state,
-        present: state.present.map((todo) => ({
+        present: present.map((todo) => ({
           ...todo,
           completed: !areAllMarked
         }))
@@ -92,7 +98,25 @@ export default function todos(state = initialState, action) {
     case CLEAR_COMPLETED:
       return {
         ...state,
-        present: state.present.filter((todo) => todo.completed === false)
+        present: present.filter((todo) => todo.completed === false)
+      }
+
+    case UNDO:
+      const previous = past[past.length - 1]
+      const newPast = past.slice(0, past.length - 1)
+      return {
+        past: newPast,
+        present: previous,
+        future: [present, ...future]
+      }
+
+    case REDO:
+      const next = future[0]
+      const newFuture = future.slice(1)
+      return {
+        past: [...past, present],
+        present: next,
+        future: newFuture
       }
 
     default:
